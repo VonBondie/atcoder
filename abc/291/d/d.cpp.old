@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+using namespace std;
+#include <atcoder/all>
+using namespace atcoder;
+#define rep(i, n) for (int i = 0; i < (int)(n); i++)
+#define rep1(i, n) for (int i = 1; i < (int)(n+1); i++)
+using ll = long long;
+using p = pair<int, int>;
+using pf = pair<double, double>;
+
+vector<p> cards;
+
+ll check(const string determined) {
+  const int idx = determined.size();
+  if(idx == cards.size()) return 1;
+
+  const p card = cards[idx];
+  string tmp_a = determined + "A";
+  string tmp_b = determined + "B";
+
+  const int before = determined[idx - 1] == 'A' ? 
+      cards[idx - 1].first : cards[idx - 1].second;
+
+  ll total = 0;
+  if(before != card.first) total += check(tmp_a);
+  if(before != card.second) total += check(tmp_b);
+
+  return total;
+}
+
+void solve() {
+  const int div = 998244353;
+  int n;
+  cin >> n;
+
+  cards.clear();
+  cards.resize(n);
+  rep(i, n) cin >> cards[i].first >> cards[i].second;
+
+  ll total = check("A") + check("B");
+
+  ll ans = total % div;
+
+  cout << ans << endl;
+}
+
+int main() {
+#ifdef ONLINE_JUDGE 
+  const int n_testcase = 1;  // Don't change here!!
+#else
+  const int n_testcase = 3;  // Change here for test cases.
+#endif
+
+  rep(i, n_testcase) {
+    solve();
+  }
+
+  return 0;
+}

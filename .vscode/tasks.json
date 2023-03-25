@@ -1,0 +1,38 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "atcoder_build",
+            "type": "shell",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-std=gnu++17",
+                "-Wall",
+                "-Wextra",
+                "-I/opt/boost/gcc/include",
+                "-L/opt/boost/gcc/lib",
+                "-I${workspaceFolder}/ac-library",
+                "-g",
+                "-o",
+                "'${workspaceFolder}/problem.exe'",
+                "'${file}'",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "cat_test_data",
+            "type": "shell",
+            "command": "cat",
+            "args": [
+                "${fileDirname}/test_data.txt"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ]
+}
