@@ -193,6 +193,7 @@ bool check(const int l, const int r) {
   return flag;
 }
 
+// O(N'2)
 void solve() {
   string S; loadVar(S);
 
@@ -213,6 +214,25 @@ void solve() {
   cout << total << endl;
 }
 
+// O(N)
+void solve2() {
+  string S; loadVar(S);
+
+  map<int, LL> cnt_patarn;
+  int state = 0;
+  cnt_patarn[state]++;
+  for(auto c: S) {
+    int num = c - '0';
+    state ^= 1 << num;
+    cnt_patarn[state]++;
+  }
+
+  LL total = 0;
+  for(auto e:cnt_patarn) 
+    if(e.second>=2) total += e.second*(e.second-1) / 2;
+  cout << total << endl;
+}
+
 int main() {
 #ifdef ONLINE_JUDGE 
   const int n_testcase = 1;  // Don't change here!!
@@ -221,7 +241,7 @@ int main() {
 #endif
 
   rep(i, n_testcase) {
-    solve();
+    solve2();
 #ifndef ONLINE_JUDGE 
     cout << endl;
 #endif
