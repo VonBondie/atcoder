@@ -92,11 +92,6 @@ void printVec(const T& v) {
   cout <<endl;
 }
 
-template <typename T>
-T Ceil(T a,T b) {
-  return (a + b - 1) / b;
-}
-
 // 素因数分解 (1~n)
 /* usage */
 // PrimeFact pf(n);
@@ -188,12 +183,20 @@ public:
 ////////////////////////////////////////////////////
 
 void solve() {
-  int n;
-  loadVar(n);
+  int N, X; loadVar(N, X);
+  VLL A(N); loadVec(N, A);
 
-  int ans = 0;
+  unordered_map<LL, LL> A_;
+  for(auto a: A) A_[a]++;
 
-  cout << ans << endl;
+  for(int i=0; i < A.size(); i++) {
+    LL tmp = A[i]+X;
+    if(A_[tmp] != 0) {
+      PRINT_YN(true);
+      return;
+    }
+  }
+  PRINT_YN(false);
 }
 
 int main() {

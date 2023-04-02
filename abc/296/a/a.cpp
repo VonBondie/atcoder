@@ -92,11 +92,6 @@ void printVec(const T& v) {
   cout <<endl;
 }
 
-template <typename T>
-T Ceil(T a,T b) {
-  return (a + b - 1) / b;
-}
-
 // 素因数分解 (1~n)
 /* usage */
 // PrimeFact pf(n);
@@ -188,12 +183,20 @@ public:
 ////////////////////////////////////////////////////
 
 void solve() {
-  int n;
-  loadVar(n);
+  int N; string S;
+  loadVar(N, S);
 
-  int ans = 0;
+  char before = S[0];
+  bool flag = true;
+  rep1(i, N-1) {
+    if(S[i] == before) {
+      flag = false;
+      break;
+    }
+    before = S[i];
+  }
 
-  cout << ans << endl;
+  PRINT_YN(flag);
 }
 
 int main() {

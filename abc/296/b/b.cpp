@@ -92,11 +92,6 @@ void printVec(const T& v) {
   cout <<endl;
 }
 
-template <typename T>
-T Ceil(T a,T b) {
-  return (a + b - 1) / b;
-}
-
 // 素因数分解 (1~n)
 /* usage */
 // PrimeFact pf(n);
@@ -188,19 +183,23 @@ public:
 ////////////////////////////////////////////////////
 
 void solve() {
-  int n;
-  loadVar(n);
+  VS S(8); loadVec(8, S);
 
-  int ans = 0;
-
-  cout << ans << endl;
+  rep(i, 8) {
+    rep(j, 8) {
+      if(S[i][j] == '*') {
+        cout << (char)(j+'a') << 8 - i << endl;
+        return;
+      }
+    }
+  }
 }
 
 int main() {
 #ifdef ONLINE_JUDGE 
   const int n_testcase = 1;  // Don't change here!!
 #else
-  const int n_testcase = 3;  // Change here for test cases.
+  const int n_testcase = 2;  // Change here for test cases.
 #endif
 
   rep(i, n_testcase) {
