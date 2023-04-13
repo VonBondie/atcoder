@@ -35,16 +35,18 @@ void loadVec(const int n, Dst&&... dst) {
 ////////////////////////////////////////////////////
 
 void solve() {
-  int n, m;
-  cin >> n, m;
-  VI a(n), b(n);
-  loadVec(m, a, b);
+  int N, M; cin >> N >> M;
+  VI A(M), B(M); loadVec(M, A, B);
 
-  
+  dsu D(N);
+  rep(i, M) D.merge(A[i] - 1, B[i] - 1);
 
-  int ans = 0;
+  LL valid = 0;
+  for(auto&& d: D.groups()) {
+    valid += d.size() - 1;
+  }
 
-  cout << ans << endl;
+  cout << M - valid << endl;
 }
 
 int main() {
