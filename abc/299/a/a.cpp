@@ -84,7 +84,20 @@ string notation(Head&& head, Tail&&... tail) {
   return s + notation(std::forward<Tail>(tail)...);
 }
 
-// 素因数分解
+template<class T>
+void printVec(const T& v) {
+  if (v.size() == 0)  return;
+  cout << v[0];
+  rep1(i, v.size()-1) cout << " " << v[i];
+  cout <<endl;
+}
+
+template <typename T>
+T Ceil(T a,T b) {
+  return (a + b - 1) / b;
+}
+
+// 素因数分解 (1~n)
 /* usage */
 // PrimeFact pf(n);
 // pf.get(x)
@@ -112,6 +125,28 @@ struct PrimeFact {
     }
 };
 
+/*  prime_factor(n)
+    入力：整数 n
+    出力：nの素因数分解
+    計算量：O(√n)前後
+*/
+template <typename T>
+map<T, T> prime_factor(T n) {
+    map<T, T> ret;
+    for (T i = 2; i * i <= n; i++) {
+        if (n % i != 0) continue;
+        T tmp = 0;
+        while (n % i == 0) {
+            tmp++;
+            n /= i;
+        }
+        ret[i] = tmp;
+    }
+    if (n != 1) ret[n] = 1;
+    return ret;
+}
+
+
 // 素数の集合を得る
 template <typename T>
 struct Prime {
@@ -135,71 +170,40 @@ struct Prime {
   list<T>& get() { return primes; }
 };
 
+template <typename T>
+class IDTable {
+public:
+  map<T, T> id_table;
+  map<T, T> id_table_;
+  IDTable() {}
+  IDTable(const vector<T>& v) {
+    rep(i, v.size()) {
+      id_table[i] = v[i];    
+      id_table_[v[i]] = i;
+    }
+  }
+  T forward(const T n) { return id_table[n]; }
+  T backward(const T n) { return id_table_[n]; }
+};
 ////////////////////////////////////////////////////
-int N, M;
-VI U(M), V(M);
-vector<list<int>> D;
-VI colors;
-
-int B = 0, R = 0;
-
-bool checkBiominal(const int i, const int color) {
-  colors[i] = color;
-  switch(color) {
-    case  1: B++; break;
-    case -1: R++; break;
-  }
-
-  for(auto e: D[i]) {
-    if(colors[e] == color) return false;
-    if(colors[e] != 0) continue;
-    if(!checkBiominal(e, -color)) return false;
-  }
-
-  return true;
-}
 
 void solve() {
-  loadVar(N, M);
-  U.resize(M, 0); V.resize(M, 0); loadVec(M, U, V);
-  D.resize(N);
-  colors.resize(N, 0);
+  int N; loadVar(N);
+  string S; loadVar(S);
 
-  dsu S(N);
-  rep(i, M) {
-    int u = U[i] - 1;
-    int v = V[i] - 1;
-    D[u].push_back(v);
-    D[v].push_back(u);
-    S.merge(u, v);
+  auto pos_fist_i = S.find('|');
+  auto pos_aster = S.find('*', pos_fist_i + 1);
+  auto pos_second_i = S.find('|', pos_fist_i + 1);
+
+  if(pos_second_i == string::npos) {
+    pos_second_i = 0;
   }
 
-  const auto& G = S.groups();
-  const int gs = S.groups().size();
-  LL ans = 0;
-
-  for(int i = 0; i < gs -1; i++) {
-    for(int j = i+1; j < gs; j++) {
-      ans += G[i].size() * G[j].size();
-    }
+  if(pos_fist_i < pos_aster && pos_aster < pos_second_i) {
+    cout << "in" << endl;
+  } else { 
+    cout << "out" << endl;
   }
-
-  rep(i, gs) {
-    B = 0; R = 0;
-    if(!checkBiominal(G[i][0], 1)) {
-      cout << 0 << endl;
-      return;
-    }
-    ans += B * R;
-    
-    LL s_edge = 0;
-    for(auto e: G[i]) {
-      s_edge += D[e].size();
-    }
-    ans -= s_edge / 2;
-  }
-
-  cout << ans << endl;
 }
 
 int main() {

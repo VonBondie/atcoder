@@ -84,7 +84,20 @@ string notation(Head&& head, Tail&&... tail) {
   return s + notation(std::forward<Tail>(tail)...);
 }
 
-// 素因数分解
+template<class T>
+void printVec(const T& v) {
+  if (v.size() == 0)  return;
+  cout << v[0];
+  rep1(i, v.size()-1) cout << " " << v[i];
+  cout <<endl;
+}
+
+template <typename T>
+T Ceil(T a,T b) {
+  return (a + b - 1) / b;
+}
+
+// 素因数分解 (1~n)
 /* usage */
 // PrimeFact pf(n);
 // pf.get(x)
@@ -112,6 +125,28 @@ struct PrimeFact {
     }
 };
 
+/*  prime_factor(n)
+    入力：整数 n
+    出力：nの素因数分解
+    計算量：O(√n)前後
+*/
+template <typename T>
+map<T, T> prime_factor(T n) {
+    map<T, T> ret;
+    for (T i = 2; i * i <= n; i++) {
+        if (n % i != 0) continue;
+        T tmp = 0;
+        while (n % i == 0) {
+            tmp++;
+            n /= i;
+        }
+        ret[i] = tmp;
+    }
+    if (n != 1) ret[n] = 1;
+    return ret;
+}
+
+
 // 素数の集合を得る
 template <typename T>
 struct Prime {
@@ -135,17 +170,43 @@ struct Prime {
   list<T>& get() { return primes; }
 };
 
+template <typename T>
+class IDTable {
+public:
+  map<T, T> id_table;
+  map<T, T> id_table_;
+  IDTable() {}
+  IDTable(const vector<T>& v) {
+    rep(i, v.size()) {
+      id_table[i] = v[i];    
+      id_table_[v[i]] = i;
+    }
+  }
+  T forward(const T n) { return id_table[n]; }
+  T backward(const T n) { return id_table_[n]; }
+};
 ////////////////////////////////////////////////////
 
 void solve() {
-  int n, k, d;
-  loadVar(n, k, d);
-  VLL a(n);
-  loadVec(n, a);
+  int N, K, D; loadVar(N, K, D);
+  VLL A(N); loadVec(N, A);
 
-  int ans = 0;
+  vector<vector<VLL>> dp(N+1, vector<VLL>(K+1, VLL(D, -1)));
+  dp[0][0][0] = 0;
 
-  cout << ans << endl;
+  rep(i, N) {
+    rep(j, K+1) {
+      rep(k, D) {
+        if(dp[i][j][k] == -1) continue;
+        dp[i+1][j][k] = max(dp[i+1][j][k], dp[i][j][k]);
+
+        if(j == K) continue;
+        LL tmp = dp[i][j][k] + A[i];
+        dp[i+1][j+1][tmp % D] = max(dp[i+1][j+1][tmp % D], tmp);
+      }
+    }
+  }
+  cout << dp[N][K][0] << endl;
 }
 
 int main() {
